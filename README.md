@@ -3,7 +3,19 @@ docker-mysql
 [![](https://badge.imagelayers.io/centurylink/mysql.svg)](https://imagelayers.io/?images=centurylink/mysql:latest 'Get your own badge on imagelayers.io')
 
 Example usage: 
-     `$ docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pass@word01 centurylink/mysql`
+
+    `$ docker run --name mysql -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=mypasswd talkincode/docker-mysql`
+     
+or
+
+    `$ docker run --name mysql -d -p 3306:3306 \
+        -v /home/var/lib/mysql:/var/lib/mysql
+        -e MYSQL_USER=myuser
+        -e MYSQL_PASSWORD=mypwd
+        -e MYSQL_DATABASE=mydb
+        -e MYSQL_ROOT_PASSWORD=myroot talkincode/docker-mysql`
+      
+     
 
 Environment variables
 ---------------------
