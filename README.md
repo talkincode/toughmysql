@@ -9,10 +9,10 @@ Example usage:
 or
 
     `$ docker run --name mysql -d -p 3306:3306 \
-        -v /home/var/lib/mysql:/var/lib/mysql
-        -e MYSQL_USER=myuser
-        -e MYSQL_PASSWORD=mypwd
-        -e MYSQL_DATABASE=mydb
+        -v /home/var/lib/mysql:/var/lib/mysql \
+        -e MYSQL_USER=myuser \
+        -e MYSQL_PASSWORD=mypwd \
+        -e MYSQL_DATABASE=mydb \
         -e MYSQL_ROOT_PASSWORD=myroot talkincode/docker-mysql`
       
      
