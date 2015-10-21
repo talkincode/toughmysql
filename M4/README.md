@@ -5,7 +5,7 @@
 
     `$ docker run --name mysql-master -d -p 3306:3306 \
         -v /home/var/lib/mysql:/var/lib/mysql \
-        -e MYSQL_ROOT_PASSWORD=myroot MYSQL_ROLE=master talkincode/docker-mysql-m4`
+        -e MYSQL_ROOT_PASSWORD=myroot MYSQL_ROLE=master talkincode/docker-mysql:M4`
         
         
 ### 创建并启动从数据库 192.168.0.11
@@ -13,7 +13,7 @@
 
     `$ docker run --name mysql-slave -d -p 3306:3306 \
         -v /home/var/lib/mysql:/var/lib/mysql \
-        -e MYSQL_ROOT_PASSWORD=myroot MYSQL_ROLE=slave talkincode/docker-mysql-m4`
+        -e MYSQL_ROOT_PASSWORD=myroot MYSQL_ROLE=slave talkincode/docker-mysql:M4`
         
         
 ### 连接主库，并运行以下命令，创建一个用户用来同步数据
