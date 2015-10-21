@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+MYSQL_ROLE=${MYSQL_ROLE:-"master"}
+cat /etc/my-${MYSQL_ROLE}.cnf > /etc/mysql/conf.d/my.cnf 
+
 chown -R mysql:mysql /var/lib/mysql
 mysql_install_db --user mysql > /dev/null
 
