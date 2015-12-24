@@ -1,5 +1,5 @@
 FROM ubuntu:14.04
-MAINTAINER CenturyLinkLabs
+MAINTAINER CenturyLinkLabs, jamiesun <jamiesun.net@gmail.com>
 
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive

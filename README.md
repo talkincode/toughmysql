@@ -1,6 +1,5 @@
-docker-mysql
-============
-[![](https://badge.imagelayers.io/centurylink/mysql.svg)](https://imagelayers.io/?images=centurylink/mysql:latest 'Get your own badge on imagelayers.io')
+# docker-mysql
+[![](https://badge.imagelayers.io/talkincode/docker-mysql:latest.svg)](https://imagelayers.io/?images=talkincode/docker-mysql:latest 'Get your own badge on imagelayers.io')
 
 Example usage: 
 
@@ -9,6 +8,7 @@ Example usage:
 or
 
     `$ docker run --name mysql -d -p 3306:3306 \
+        --privileged \
         -v /home/var/lib/mysql:/var/lib/mysql \
         -e MYSQL_USER=myuser \
         -e MYSQL_PASSWORD=mypwd \
@@ -17,8 +17,8 @@ or
       
      
 
-Environment variables
----------------------
+## Environment variables
+
 
  - `MYSQL_ROOT_PASSWORD`: The password for the root user. Defaults to a blank password
  - `MYSQL_DATABASE`: A database to automatically create. If not provided, does not create a database.
