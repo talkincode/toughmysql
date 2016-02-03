@@ -93,7 +93,7 @@ read -p "MASTER_LOG_POS: " mysql_log_pos
 mysql_log_pos=\${mysql_log_pos:-""}
 
 echo "STOP SLAVE;\
-CHANGE MASTER TO MASTER_HOST = '\$mysql_host', MASTER_PORT = '\$mysql_port', \
+CHANGE MASTER TO MASTER_HOST = '\$mysql_host', MASTER_PORT = \$mysql_port, \
  MASTER_USER = 'repl', MASTER_PASSWORD = '\$mysql_repl_password',\
  MASTER_LOG_FILE = '\$mysql_log_file', \
  MASTER_LOG_POS = \$mysql_log_pos; \
