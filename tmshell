@@ -18,6 +18,9 @@ usage ()
     restart                     mysql instance restart
     stop                        mysql instance stop
     logs                        mysql instance logs
+    showmaster                  mysql instance show master status
+    showslave                   mysql instance show slave status
+    upmaster                    mysql instance update master sync config
     dsh                         mysql instance bash term
 
     All other options are passed to the tmshell program.
