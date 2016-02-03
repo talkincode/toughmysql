@@ -78,19 +78,19 @@ EOF
 #!/bin/bash
 
 read -p "MASTER_HOST: " mysql_host
-mysql_host=${mysql_host:-""}
+mysql_host=\${mysql_host:-""}
 read -p "MASTER_REPL_PASSWORD: " mysql_repl_password
-mysql_repl_password=${mysql_repl_password:-$MYSQL_REPL_PASSWORD}
+mysql_repl_password=\${mysql_repl_password:-$MYSQL_REPL_PASSWORD}
 read -p "MASTER_LOG_FILE: " mysql_log_file
-mysql_log_file=${mysql_log_file:-""}
+mysql_log_file=\${mysql_log_file:-""}
 read -p "MASTER_LOG_POS: " mysql_log_pos
-mysql_log_pos=${mysql_log_pos:-""}
+mysql_log_pos=\${mysql_log_pos:-""}
 
 echo "STOP SLAVE;\
-CHANGE MASTER TO MASTER_HOST = '$mysql_host',\
- MASTER_USER = 'repl', MASTER_PASSWORD = '$mysql_repl_password',\
- MASTER_LOG_FILE = '$mysql_log_file', \
- MASTER_LOG_POS = $mysql_log_pos; \
+CHANGE MASTER TO MASTER_HOST = '\$mysql_host',\
+ MASTER_USER = 'repl', MASTER_PASSWORD = '\$mysql_repl_password',\
+ MASTER_LOG_FILE = '\$mysql_log_file', \
+ MASTER_LOG_POS = \$mysql_log_pos; \
 START SLAVE;" | mysql
 EOF
     chmod +x /usr/local/bin/upmaster
