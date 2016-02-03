@@ -1,0 +1,234 @@
+#!/bin/sh
+# mysql  install script
+# author: jamiesun.net@gmail.com
+
+rundir=/home/toughrun
+
+usage ()
+{
+    cat <<EOF
+    Usage: $0 [OPTIONS] instance
+
+    docker_setup                install docker, docker-compose
+    pull                        mysql docker images pull
+    install                     install default mysql instance
+    remove                      uninstall mysql instance
+    config                      mysql instance config edit
+    status                      mysql instance status
+    restart                     mysql instance restart
+    stop                        mysql instance stop
+    logs                        mysql instance logs
+    dsh                         mysql instance bash term
+
+    All other options are passed to the tmshell program.
+EOF
+        exit 1
+}
+
+
+install()
+{
+    instance=${1:-mysql}
+
+    mkdir -p ${rundir}/$instance
+
+    read -p "Image select [M1,M4,512M,latest](latest): " mysql_image
+    mysql_image=${mysql_image:-latest}
+
+    read -p "mysql user [raduser]: " mysql_user
+    mysql_user=${mysql_user:-raduser}
+
+    read -p "mysql user password [radpwd]: " mysql_password
+    mysql_password=${mysql_password:-radpwd}
+
+    read -p "mysql database [radiusd]: " mysql_database
+    mysql_database=${mysql_database:-radiusd}
+
+    read -p "mysql root password [none]: " mysql_root_password
+    mysql_root_password=${mysql_root_password:-""}
+
+    read -p "mysql replication password [replication]: " mysql_repl_password
+    mysql_repl_password=${mysql_repl_password:-replication}
+
+    read -p "mysql port [3306]: " mysql_port
+    mysql_port=${mysql_port:-3306}
+
+    read -p "mysql server id [1]: " serverid
+    serverid=${serverid:-1}
+
+    cat <<EOF
+
+    ToughMySQL instance config:
+
+    instance name: $instance
+    mysql_user: ${mysql_user}
+    mysql_password: ${mysql_password}
+    mysql_database: ${mysql_database}
+    mysql_root_password: ${mysql_root_password}
+    mysql_repl_password: ${mysql_repl_password}
+    mysql_port: ${mysql_port}
+
+EOF
+
+    rm -f ${rundir}/$instance/docker-compose.yml
+    cat > ${rundir}/$instance/docker-compose.yml <<EOF
+database:
+    container_name: db_${instance}
+    image: "index.alauda.cn/toughstruct/mysql:${mysql_image}""
+    privileged: true
+    ports:
+        - "${mysql_port}:3306"
+    ulimits:
+        nproc: 65535
+        nofile:
+          soft: 20000
+          hard: 40000
+    environment:
+        - SERVERID=$serverid
+        - MYSQL_USER=$mysql_user
+        - MYSQL_PASSWORD=$mysql_password
+        - MYSQL_DATABASE=$mysql_database
+        - MYSQL_ROOT_PASSWORD=$mysql_root_password
+        - MYSQL_REPL_PASSWORD=$mysql_repl_password
+    restart: always
+    volumes:
+        - ${rundir}/$instance/dbmysql:/var/lib/mysql
+EOF
+
+    cd ${rundir}/$instance
+
+    cat ${rundir}/$instance/docker-compose.yml
+
+    docker-compose up -d
+    docker-compose ps
+
+    exit 0
+}
+
+
+docker_setup()
+{
+    curl -sSL https://get.daocloud.io/docker | sh
+
+    curl -L https://get.daocloud.io/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+
+    ln -s /usr/local/bin/docker-compose /usr/local/bin/docp
+
+    service docker start
+}
+
+
+remove()
+{
+    instance=${1:-mysql}
+    cd ${rundir}/$instance
+    read -p "Will delete all, do you confirm? [y/n](n): " is_rm
+    is_rm=${is_rm:-n}
+    if [ $is_rm == "y" ]; then
+        docker-compose kill
+        docker-compose rm
+        rm -fr ${rundir}/$instance/dbmysql
+    fi 
+}
+
+
+config()
+{
+    instance=${1:-mysql}    
+    vi ${rundir}/$instance/docker-compose.yml
+}
+
+status()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker-compose ps
+}
+
+restart()
+{
+    instance=${1:-mysql}      
+    cd ${rundir}/$instance
+    docker-compose restart $2
+    docker-compose ps
+}
+
+stop()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker-compose stop $2
+    docker-compose ps
+}
+
+
+
+logs()
+{
+    instance=${1:-mysql}
+    cd ${rundir}/$instance
+    docker-compose logs
+}
+
+dsh()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker exec -it db_$instance bash
+}
+
+
+pull()
+{
+    docker pull index.alauda.cn/toughstruct/mysql
+}
+
+
+case "$1" in
+
+  docker_setup)
+    docker_setup
+  ;;
+
+  install)
+    install $2
+  ;;
+
+  remove)
+    remove $2
+  ;;
+
+  config)
+    config $2
+  ;;
+
+  status)
+    status $2
+  ;;
+
+  restart)
+    restart $2 $3
+  ;;
+
+  stop)
+    stop $2 $3
+  ;;
+
+  logs)
+    logs $2
+  ;;
+
+  dsh)
+    dsh $2
+  ;;
+
+  pull)
+    pull
+  ;;
+
+  *)
+   usage
+  ;;
+
+esac

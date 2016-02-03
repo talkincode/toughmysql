@@ -7,13 +7,14 @@ log_error=/dev/stderr
 
 log-bin = mysql-bin 
 server-id = 2
-replicate-do-db = hamydb
-replicate-ignore-db = mysql
+binlog_format="MIXED"
+auto-increment-increment = 2 
+auto-increment-offset = 2  
 
-max_connections=512
+max_connections=1024
 max_connect_errors=100000
 max_allowed_packet=8M
-max_heap_table_size=32M
+max_heap_table_size=1024M
 sort_buffer_size=4M
 join_buffer_size=128K
 thread_cache_size=16

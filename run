@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+SERVERID=${SERVERID:-""}
+
 chown -R mysql:mysql /var/lib/mysql
 mysql_install_db --user mysql > /dev/null
 
@@ -10,6 +12,7 @@ MYSQL_DATABASE2=${MYSQL_DATABASE2:-""}
 MYSQL_DATABASE3=${MYSQL_DATABASE3:-""}
 MYSQL_USER=${MYSQL_USER:-""}
 MYSQL_PASSWORD=${MYSQL_PASSWORD:-""}
+MYSQL_REPL_PASSWORD=${MYSQL_REPL_PASSWORD:-"replication"}
 
 tfile=`mktemp`
 if [[ ! -f "$tfile" ]]; then
@@ -45,6 +48,49 @@ if [[ $MYSQL_DATABASE3 != "" ]]; then
     if [[ $MYSQL_USER != "" ]]; then
         echo "GRANT ALL ON \`$MYSQL_DATABASE3\`.* to '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" >> $tfile
     fi
+fi
+
+if [[ $SERVERID != "" ]]; then
+    echo "log-bin = mysql-bin" >> /etc/mysql/conf.d/my.cnf
+    echo "server-id = ${SERVERID} " >> /etc/mysql/conf.d/my.cnf
+    echo "auto-increment-increment = ${SERVERID}" >> /etc/mysql/conf.d/my.cnf
+    echo "auto-increment-offset = ${SERVERID}" >> /etc/mysql/conf.d/my.cnf
+    echo "grant replication client,replication slave on *.* to 'repl'@'%' identified by '$MYSQL_REPL_PASSWORD';" >> $tfile
+
+    cat > /usr/local/bin/showmaster <<EOF
+#!/bin/bash
+echo 'FLUSH TABLES WITH READ LOCK;SHOW MASTER STATUS;Unlock Tables;' | mysql
+EOF
+    chmod +x /usr/local/bin/showmaster
+
+    cat > /usr/local/bin/showslave <<EOF
+#!/bin/bash
+echo 'Show Slave Status;' | mysql
+EOF
+    chmod +x /usr/local/bin/showslave
+
+
+    cat > /usr/local/bin/upmaster <<EOF
+#!/bin/bash
+
+read -p "MASTER_HOST: " mysql_host
+mysql_host=${mysql_host:-""}
+read -p "MASTER_REPL_PASSWORD: " mysql_repl_password
+mysql_repl_password=${mysql_repl_password:-$MYSQL_REPL_PASSWORD}
+read -p "MASTER_LOG_FILE: " mysql_log_file
+mysql_log_file=${mysql_log_file:-""}
+read -p "MASTER_LOG_POS: " mysql_log_pos
+mysql_log_pos=${mysql_log_pos:-""}
+
+echo 'STOP SLAVE;\
+CHANGE MASTER TO MASTER_HOST = '$mysql_host',\
+ MASTER_USER = 'repl', MASTER_PASSWORD = '$mysql_repl_password',\
+ MASTER_LOG_FILE = '$mysql_log_file', \
+ MASTER_LOG_POS = $mysql_log_pos; \
+START SLAVE;' | mysql
+EOF
+    chmod +x /usr/local/bin/upmaster
+
 fi
 
 /usr/sbin/mysqld --bootstrap --verbose=0 < $tfile
