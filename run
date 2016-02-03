@@ -57,6 +57,10 @@ fi
 if [[ $SERVERID != "" ]]; then
     echo "log-bin = mysql-bin" >> /etc/mysql/conf.d/my.cnf
     echo "server-id = ${SERVERID} " >> /etc/mysql/conf.d/my.cnf
+    echo "binlog-ignore-db = test" >> /etc/mysql/conf.d/my.cnf
+    echo "binlog-ignore-db = mysql " >> /etc/mysql/conf.d/my.cnf
+    echo "replicate-ignore-db = test " >> /etc/mysql/conf.d/my.cnf
+    echo "replicate-ignore-db = mysql " >> /etc/mysql/conf.d/my.cnf
     echo "auto-increment-increment = ${SERVERID}" >> /etc/mysql/conf.d/my.cnf
     echo "auto-increment-offset = ${SERVERID}" >> /etc/mysql/conf.d/my.cnf
     echo "grant replication client,replication slave on *.* to 'repl'@'%' identified by '$MYSQL_REPL_PASSWORD';" >> $tfile
