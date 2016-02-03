@@ -21,6 +21,7 @@ usage ()
     showmaster                  mysql instance show master status
     showslave                   mysql instance show slave status
     upmaster                    mysql instance update master sync config
+    backup                      mysql instance backup database
     dsh                         mysql instance bash term
 
     All other options are passed to the tmshell program.
@@ -100,6 +101,7 @@ database:
     restart: always
     volumes:
         - ${rundir}/$instance/dbmysql:/var/lib/mysql
+        - ${rundir}/$instance/backup:/var/backup
 EOF
 
     cd ${rundir}/$instance
@@ -208,6 +210,12 @@ upmaster()
     docker exec -it db_$instance upmaster
 }
 
+backup()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker exec -it db_$instance dbdump
+}
 
 pull()
 {
@@ -263,6 +271,10 @@ case "$1" in
 
   upmaster)
     upmaster $2
+  ;;
+
+  backup)
+    backup $2
   ;;
 
   pull)
