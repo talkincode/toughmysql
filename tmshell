@@ -35,9 +35,6 @@ install()
 
     mkdir -p ${rundir}/$instance
 
-    read -p "Image select [M1,M4,512M,latest](latest): " mysql_image
-    mysql_image=${mysql_image:-latest}
-
     read -p "mysql user [raduser]: " mysql_user
     mysql_user=${mysql_user:-raduser}
 
@@ -56,8 +53,11 @@ install()
     read -p "mysql port [3306]: " mysql_port
     mysql_port=${mysql_port:-3306}
 
-    read -p "mysql server id [1]: " serverid
-    serverid=${serverid:-1}
+    read -p "mysql server id [1,2...](default none): " serverid
+    serverid=${serverid:-""}
+
+    read -p "mysql max memary [512M,1G,4G](default none): " mysql_max_mem
+    mysql_max_mem=${mysql_max_mem:-""}
 
     cat <<EOF
 
@@ -70,6 +70,9 @@ install()
     mysql_root_password: ${mysql_root_password}
     mysql_repl_password: ${mysql_repl_password}
     mysql_port: ${mysql_port}
+    serverid: $serverid
+    mysql_max_mem: $mysql_max_mem
+
 
 EOF
 
@@ -77,7 +80,7 @@ EOF
     cat > ${rundir}/$instance/docker-compose.yml <<EOF
 database:
     container_name: db_${instance}
-    image: "index.alauda.cn/toughstruct/mysql:${mysql_image}"
+    image: "index.alauda.cn/toughstruct/mysql"
     privileged: true
     ports:
         - "${mysql_port}:3306"
@@ -88,6 +91,7 @@ database:
           hard: 40000
     environment:
         - SERVERID=$serverid
+        - MYSQL_MAX_MEM=$mysql_max_mem
         - MYSQL_USER=$mysql_user
         - MYSQL_PASSWORD=$mysql_password
         - MYSQL_DATABASE=$mysql_database
