@@ -71,11 +71,19 @@ echo 'FLUSH TABLES WITH READ LOCK;SHOW MASTER STATUS \G;Unlock Tables;' | mysql
 EOF
     chmod +x /usr/local/bin/showmaster
 
+    cat > /usr/local/bin/showmaster <<EOF
+#!/bin/bash
+echo 'FLUSH TABLES WITH READ LOCK;SHOW MASTER STATUS \G;Unlock Tables;' | mysql
+EOF
+    chmod +x /usr/local/bin/showmaster
+
     cat > /usr/local/bin/showslave <<EOF
 #!/bin/bash
 echo 'Show Slave Status \G;' | mysql
 EOF
     chmod +x /usr/local/bin/showslave
+
+
 
 
     cat > /usr/local/bin/upmaster <<EOF
