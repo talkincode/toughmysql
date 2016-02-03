@@ -5,13 +5,8 @@ general_log=1
 general_log_file=/dev/stdout
 log_error=/dev/stderr
 
-log-bin = mysql-bin 
-server-id = 2
-binlog_format="MIXED"
-auto-increment-increment = 2 
-auto-increment-offset = 2  
 
-max_connections=1024
+max_connections=2048
 max_connect_errors=100000
 max_allowed_packet=8M
 max_heap_table_size=1024M
@@ -35,3 +30,5 @@ innodb_data_home_dir=/var/lib/mysql/
 innodb_data_file_path=ibdata1:256M;ibdata2:512M:autoextend
 innodb_autoextend_increment=64
 innodb_thread_concurrency=8
+
+

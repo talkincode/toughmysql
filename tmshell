@@ -74,7 +74,7 @@ EOF
     cat > ${rundir}/$instance/docker-compose.yml <<EOF
 database:
     container_name: db_${instance}
-    image: "index.alauda.cn/toughstruct/mysql:${mysql_image}""
+    image: "index.alauda.cn/toughstruct/mysql:${mysql_image}"
     privileged: true
     ports:
         - "${mysql_port}:3306"
@@ -178,6 +178,27 @@ dsh()
     docker exec -it db_$instance bash
 }
 
+showmaster()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker exec -it db_$instance showmaster
+}
+
+showslave()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker exec -it db_$instance showslave
+}
+
+upmaster()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker exec -it db_$instance upmaster
+}
+
 
 pull()
 {
@@ -221,6 +242,18 @@ case "$1" in
 
   dsh)
     dsh $2
+  ;;
+
+  showmaster)
+    showmaster $2
+  ;;
+
+  showslave)
+    showslave $2
+  ;;
+
+  upmaster)
+    upmaster $2
   ;;
 
   pull)
