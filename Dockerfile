@@ -9,9 +9,9 @@ RUN apt-get update && apt-get -y upgrade
 RUN apt-get install -y mysql-server
 
 ADD my.cnf /etc/mysql/conf.d/my.cnf 
-ADD my-1G.cnf /etc/mysql/conf.d/my.cnf 
-ADD my-4G.cnf /etc/mysql/conf.d/my.cnf 
-ADD my-512M.cnf /etc/mysql/conf.d/my.cnf 
+ADD my-1G.cnf /etc/my-1G.cnf 
+ADD my-4G.cnf /etc/my-4G.cnf 
+ADD my-512M.cnf /etc/my-512M.cnf 
 
 ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
