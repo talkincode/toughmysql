@@ -32,4 +32,6 @@ innodb_data_file_path=ibdata1:256M;ibdata2:512M:autoextend
 innodb_autoextend_increment=64
 innodb_thread_concurrency=16
 
-
+long_query_time = 1
+log-slow-queries = /var/lib/mysql/slow_query.log
+log-queries-not-using-indexes = true
