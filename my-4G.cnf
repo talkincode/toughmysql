@@ -26,12 +26,13 @@ innodb_log_buffer_size=8M
 innodb_log_file_size=128M
 innodb_log_files_in_group=2
 innodb_buffer_pool_size=4G
-innodb_flush_logs_at_trx_commit=2
+innodb_flush_log_at_trx_commit = 2
 innodb_data_home_dir=/var/lib/mysql/
 innodb_data_file_path=ibdata1:256M;ibdata2:512M:autoextend
 innodb_autoextend_increment=64
 innodb_thread_concurrency=16
 
+slow_query_log = 1
+slow_query_log_file = /var/lib/mysql/slow_query.log
 long_query_time = 1
-log-slow-queries = /var/lib/mysql/slow_query.log
-log-queries-not-using-indexes = true
+log_queries_not_using_indexes = 1
