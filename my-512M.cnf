@@ -8,12 +8,12 @@ log_error=/dev/stderr
 
 max_connections=512
 max_connect_errors=10000
-max_allowed_packet=2M
+max_allowed_packet=4M
 max_heap_table_size=128M
 sort_buffer_size=1M
 join_buffer_size=128K
 thread_cache_size=16
-query_cache_size=2M
+query_cache_size=32k
 query_cache_limit=100K
 tmp_table_size=4M
 read_buffer_size=1M
@@ -25,8 +25,9 @@ innodb_log_buffer_size=1M
 innodb_log_file_size=16M
 innodb_log_files_in_group=2
 innodb_buffer_pool_size=512M
+innodb_flush_logs_at_trx_commit=2
 innodb_data_home_dir=/var/lib/mysql/
 innodb_data_file_path=ibdata1:64M;ibdata2:256M:autoextend
 innodb_autoextend_increment=25
-innodb_thread_concurrency=2
+innodb_thread_concurrency=8
 
