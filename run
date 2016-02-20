@@ -2,6 +2,8 @@
 set -e
 
 SERVERID=${SERVERID:-""}
+AI_INCREMENT=${AI_INCREMENT:-"1"}
+AI_OFFSET=${AI_OFFSET:-"1"}
 MYSQL_MAX_MEM=${MYSQL_MAX_MEM:-""}
 if [[ $MYSQL_MAX_MEM != "" ]]; then
     cat /etc/my-${MYSQL_MAX_MEM}.cnf > /etc/mysql/conf.d/my.cnf 
@@ -12,8 +14,6 @@ mysql_install_db --user mysql > /dev/null
 
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-""}
 MYSQL_DATABASE=${MYSQL_DATABASE:-""}
-MYSQL_DATABASE2=${MYSQL_DATABASE2:-""}
-MYSQL_DATABASE3=${MYSQL_DATABASE3:-""}
 MYSQL_USER=${MYSQL_USER:-""}
 MYSQL_PASSWORD=${MYSQL_PASSWORD:-""}
 MYSQL_REPL_PASSWORD=${MYSQL_REPL_PASSWORD:-"replication"}
@@ -38,22 +38,6 @@ if [[ $MYSQL_DATABASE != "" ]]; then
     fi
 fi
 
-if [[ $MYSQL_DATABASE2 != "" ]]; then
-    echo "CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE2\` CHARACTER SET utf8 COLLATE utf8_general_ci;" >> $tfile
-
-    if [[ $MYSQL_USER != "" ]]; then
-        echo "GRANT ALL ON \`$MYSQL_DATABASE2\`.* to '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" >> $tfile
-    fi
-fi
-
-if [[ $MYSQL_DATABASE3 != "" ]]; then
-    echo "CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE3\` CHARACTER SET utf8 COLLATE utf8_general_ci;" >> $tfile
-
-    if [[ $MYSQL_USER != "" ]]; then
-        echo "GRANT ALL ON \`$MYSQL_DATABASE3\`.* to '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" >> $tfile
-    fi
-fi
-
 if [[ $SERVERID != "" ]]; then
     echo "log-bin = mysql-bin" >> /etc/mysql/conf.d/my.cnf
     echo "server-id = ${SERVERID} " >> /etc/mysql/conf.d/my.cnf
@@ -61,8 +45,8 @@ if [[ $SERVERID != "" ]]; then
     echo "binlog-ignore-db = mysql " >> /etc/mysql/conf.d/my.cnf
     echo "replicate-ignore-db = test " >> /etc/mysql/conf.d/my.cnf
     echo "replicate-ignore-db = mysql " >> /etc/mysql/conf.d/my.cnf
-    echo "auto-increment-increment = ${SERVERID}" >> /etc/mysql/conf.d/my.cnf
-    echo "auto-increment-offset = ${SERVERID}" >> /etc/mysql/conf.d/my.cnf
+    echo "auto-increment-increment = ${AI_INCREMENT}" >> /etc/mysql/conf.d/my.cnf
+    echo "auto-increment-offset = ${AI_OFFSET}" >> /etc/mysql/conf.d/my.cnf
     echo "grant replication client,replication slave on *.* to 'repl'@'%' identified by '$MYSQL_REPL_PASSWORD';" >> $tfile
 
     cat > /usr/local/bin/showmaster <<EOF

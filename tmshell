@@ -57,6 +57,13 @@ install()
     read -p "mysql server id [1,2...](default none): " serverid
     serverid=${serverid:-""}
 
+    if [[ $serverid != "" ]]; then
+        read -p "mysql auto-increment-increment [1,2...](default 1): " ai_increment
+        ai_increment=${ai_increment:-"1"}
+        read -p "mysql auto-increment-offset [1,2...](default 1): " ai_offset
+        ai_offset=${ai_offset:-"1"}
+    fi
+
     read -p "mysql max memary [512M,1G,4G](default none): " mysql_max_mem
     mysql_max_mem=${mysql_max_mem:-""}
 
@@ -92,6 +99,8 @@ database:
           hard: 40000
     environment:
         - SERVERID=$serverid
+        - AI_INCREMENT=$ai_increment
+        - AI_OFFSET=$ai_offset
         - MYSQL_MAX_MEM=$mysql_max_mem
         - MYSQL_USER=$mysql_user
         - MYSQL_PASSWORD=$mysql_password
