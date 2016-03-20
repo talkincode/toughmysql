@@ -6,7 +6,7 @@ general_log_file=/dev/stdout
 log_error=/dev/stderr
 
 
-max_connections=512
+max_connections=640
 max_connect_errors=10000
 max_allowed_packet=4M
 max_heap_table_size=128M

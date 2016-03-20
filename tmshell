@@ -22,6 +22,7 @@ usage ()
     showslave                   mysql instance show slave status
     upmaster                    mysql instance update master sync config
     backup                      mysql instance backup database
+    makedb                      mysql instance create new database
     dsh                         mysql instance bash term
 
     All other options are passed to the tmshell program.
@@ -200,7 +201,7 @@ showmaster()
 {
     instance=${1:-mysql}    
     cd ${rundir}/$instance
-    docker exec -it db_$instance showmaster
+    docker exec -it db_$instance dbutils showmaster
     echo "hosts:"
     ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"
 }
@@ -209,28 +210,48 @@ showslave()
 {
     instance=${1:-mysql}    
     cd ${rundir}/$instance
-    docker exec -it db_$instance showslave
+    docker exec -it db_$instance dbutils showslave
 }
 
 upmaster()
 {
     instance=${1:-mysql}    
     cd ${rundir}/$instance
-    docker exec -it db_$instance upmaster
+    docker exec -it db_$instance dbutils upmaster
 }
 
 backup()
 {
     instance=${1:-mysql}    
     cd ${rundir}/$instance
-    docker exec -it db_$instance dbdump
+    docker exec -it db_$instance dbutils backup
 }
+
+showdbs()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker exec -it db_$instance dbutils showdbs
+}
+
+makedb()
+{
+    instance=${1:-mysql}    
+    cd ${rundir}/$instance
+    docker exec -it db_$instance dbutils makedb
+}
+
 
 pull()
 {
     docker pull index.alauda.cn/toughstruct/mysql
 }
 
+
+upshell()
+{
+    wget https://github.com/talkincode/toughmysql/raw/master/tmshell -O /usr/local/bin/tmshell
+}
 
 case "$1" in
 
@@ -284,6 +305,18 @@ case "$1" in
 
   backup)
     backup $2
+  ;;
+
+  showdbs)
+    showdbs $2
+  ;;
+
+  makedb)
+    makedb $2
+  ;;
+
+  upshell)
+    upshell $2
   ;;
 
   pull)

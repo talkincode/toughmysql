@@ -16,8 +16,8 @@ ADD my-512M.cnf /etc/my-512M.cnf
 ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
 
-ADD dbdump /usr/local/bin/dbdump
-RUN chmod +x /usr/local/bin/dbdump
+ADD dbutils /usr/local/bin/dbutils
+RUN chmod +x /usr/local/bin/dbutils
 
 VOLUME ["/var/lib/mysql"]
 VOLUME ["/var/backup"]
