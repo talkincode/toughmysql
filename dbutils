@@ -96,6 +96,10 @@ case "$1" in
     backup
   ;;
 
+  showdbs)
+    showdbs
+  ;;
+  
   makedb)
     makedb
   ;;
