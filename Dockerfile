@@ -19,6 +19,9 @@ RUN chmod +x /usr/local/bin/run
 ADD dbutils /usr/local/bin/dbutils
 RUN chmod +x /usr/local/bin/dbutils
 
+RUN cp /code/crontabfile /etc/crontab
+RUN crontab /etc/crontab
+
 VOLUME ["/var/lib/mysql"]
 VOLUME ["/var/backup"]
 

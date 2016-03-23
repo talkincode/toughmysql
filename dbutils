@@ -27,7 +27,7 @@ backup()
     PASSWORD=$MYSQL_ROOT_PASSWORD
     OUTPUT="/var/backup"
 
-    find $OUTPUT -name "*.sql.gz" -type f -mtime +7 -exec rm {} ; > /dev/null 2>&1
+    find $OUTPUT -name "*.sql.gz" -type f -mtime +14 -exec rm -f {} \; > /dev/null 2>&1
      
     databases=`mysql --user=$USER --password=$PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database`
      
