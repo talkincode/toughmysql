@@ -21,9 +21,9 @@ ADD dbutils /usr/local/bin/dbutils
 RUN chmod +x /usr/local/bin/dbutils
 
 # crontab
-ADD crontabfile /tmp/crontab
-RUN touch /var/log/cron.log
-RUN crontab /tmp/crontab
+RUN echo "30 1 * * * /usr/local/bin/dbutils backup > /dev/null\r\n" > /tmp/crontabs && \
+    touch /var/log/cron.log && \
+    crontab /tmp/crontabs
 
 
 VOLUME ["/var/lib/mysql"]
