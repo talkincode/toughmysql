@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+rsyslogd
+cron
+
 SERVERID=${SERVERID:-""}
 AI_INCREMENT=${AI_INCREMENT:-"1"}
 AI_OFFSET=${AI_OFFSET:-"1"}
