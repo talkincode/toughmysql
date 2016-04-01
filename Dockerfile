@@ -10,7 +10,7 @@ RUN apt-get install -y mysql-server rsyslog
 
 ADD my.cnf /etc/mysql/conf.d/my.cnf 
 ADD my-1G.cnf /etc/my-1G.cnf 
-ADD my-2G.cnf /etc/my-1G.cnf 
+ADD my-2G.cnf /etc/my-2G.cnf 
 ADD my-4G.cnf /etc/my-4G.cnf 
 ADD my-512M.cnf /etc/my-512M.cnf 
 
